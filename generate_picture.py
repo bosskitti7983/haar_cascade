@@ -11,3 +11,5 @@ from math import sqrt
 *                 config tensorflow                *
 *                                                  *
 *************************************************'''
+
+print("test")
