@@ -38,7 +38,7 @@ try:
         os.remove(os.path.join('dataExtract',f)) 
 
 except Exception:
-    print("not file in dataExtract folder")
+    print("error to remove file in dataExtract folder")
 
 '''*************************************************
 *                                                  *
