@@ -1,4 +1,4 @@
-#"D:\virtualenv\ROBOTICS_studios\Scripts\activate"
+# ~/virtualenv/ROBOTICS_studios/bin/python
 
 
 '''*************************************************
