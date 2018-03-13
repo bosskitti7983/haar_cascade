@@ -25,7 +25,9 @@ import numpy as np
 
 def main():
     inputKey = sys.argv[1:]
-    if str(inputKey[0]) == 'help':
+    
+    
+    if inputKey == [] or str(inputKey[0]) == 'help':
         print('prepare_haarCascade [method] [param] \nmethod:\tresize\t\tcreate_bg\tgen_image')
         print('param:\tmain image\tmain class\tnumber per class\n\ttrain-0 24\tone\t\t50')
     elif str(inputKey[0]) == 'resize':
@@ -83,15 +85,15 @@ def resize_image(selectFile = 'test-0.png', size = 24):
     path = 'dataExtract'
     fileList= [f for f in os.listdir(path)]
     for f in fileList:
-        img = Image.open(path+'\\'+f)
+        img = Image.open(path+'/'+f)
         if img.height < int(size):
             sys.exit('size is bigger than '+str(img.height))
 
         img = img.resize((int(size),int(size)),Image.ANTIALIAS)
-        img.save('data\\'+f)
+        img.save('data/'+f)
 
         if f.split('_')[1] == selectFile:
-            img.save('main_img\\'+f)
+            img.save('main_img/'+f)
 
 
 def create_bg_txt(select_value):
@@ -136,9 +138,9 @@ def create_bg_txt(select_value):
     if str(select_value) in str(listOfClass):
         for f in randomList:
             if str(f.split('_')[0]) == str(select_value):
-                f_pos.write("data\\"+f+"\n")
+                f_pos.write("data/"+f+"\n")
             else:
-                f_neg.write("data\\"+f+"\n")
+                f_neg.write("data/"+f+"\n")
     else:
         sys.exit('out of class')
 
@@ -186,7 +188,7 @@ def generate_picture(limitFilePerClass = 50):
     for s in range(0,3): # 3 suffix
         for j in range(0,30): # 30 class
             object = listOfClass[j]
-            f = open('dataCompress\\dataset_'+str(object)+'_all_'+suffix[s]+'.txt','r')
+            f = open('dataCompress/dataset_'+str(object)+'_all_'+suffix[s]+'.txt','r')
             image = str(f.read()).split('\n')[:-1]
             f.close()
 
@@ -194,7 +196,7 @@ def generate_picture(limitFilePerClass = 50):
             numCount = 0
             for i in range(len(image)):
                 
-                path = 'dataExtract\\'+str(object)+'_'+suffix[s]+'-'+str(numCount)+'.png'
+                path = 'dataExtract/'+str(object)+'_'+suffix[s]+'-'+str(numCount)+'.png'
 
                 image[i] = np.fromstring(image[i], dtype=float, sep=',')
                 image[i] = np.array(image[i])
