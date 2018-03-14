@@ -1,4 +1,4 @@
-# ~/virtualenv/ROBOTICS_studios/bin/python
+# ~/virtualenv/ROBOTICS_studios/bin
 
 
 '''*************************************************
@@ -9,13 +9,22 @@
 
 import os
 import sys
+import platform
 from random import choice
 
 from PIL import Image
 from math import sqrt
 import numpy as np
 
+'''*************************************************
+*                                                  *
+*                 define valuable                  *
+*                                                  *
+*************************************************'''
 
+dirCom = '/'
+weight=24
+height=24
 
 '''*************************************************
 *                                                  *
@@ -24,38 +33,70 @@ import numpy as np
 *************************************************'''
 
 def main():
+    global dirCom, weight, height
     inputKey = sys.argv[1:]
     
-    
+    if platform.system() == 'Linux':
+        dirCom = '/'
+    elif platform.system() == 'Windows':
+        dirCom = '\\'
+        
     if inputKey == [] or str(inputKey[0]) == 'help':
-        print('prepare_haarCascade [method] [param] \nmethod:\tresize\t\tcreate_bg\tgen_image')
-        print('param:\tmain image\tmain class\tnumber per class\n\ttrain-0 24\tone\t\t50')
+        print('set data')
+        print('prepare_haarCascade [method] [param] \nmethod:\tgen_image\tresize\t\t\tcreate_bg')
+        print('param:\tnumber/class\tmain_image -- size\tmain class\n\t50\t\ttrain-0 24\t\tone')
+        print('------------------------------------------------------------')
+        print('generate classification : required --> libopencv-dev ')
+        print('prepare_haarCascade [method] [param]')
+        print('method:\tcreatesamples\t\ttraincascade\t\t\thaartraining\tperformance')
+        print('param:\tmain_image -- number\tnumpos -- numneg -- numstate\tnon_finished\tnon_finished')
+        print('\tone 1000\t\t800 2400 10\t\t\t-\t\t-\n')
+
     elif str(inputKey[0]) == 'resize':
         try :
             resize_image(selectFile = (str(inputKey[1])+'.png'), size = int(inputKey[2]))
         except Exception :
             resize_image()
+
     elif str(inputKey[0]) == 'create_bg':
         try :
             create_bg_txt(select_value = str(inputKey[1]))
-        except Exception :
-            sys.exit('not found argument')
+        except Exception as e:
+            sys.exit('error argument : '+str(e))
+
     elif str(inputKey[0]) == 'gen_image':
         try :
             generate_picture(limitFilePerClass = int(inputKey[1]))
-        except Exception :
+        except Exception as e:
             generate_picture()
 
+    elif str(inputKey[0]) == 'createsamples' and platform.system() == 'Linux' :
+        try:
+            run_opencv_createsamples(main_img=str(inputKey[1]),number=str(inputKey[2]))
+        except Exception as e:
+            sys.exit('createsamples argument error : '+str(e))
+
+    elif str(inputKey[0]) == 'traincascade' and platform.system() == 'Linux' :
+        try:
+            run_opencv_traincascade(numpos=str(inputKey[1]),numneg=str(inputKey[2]),numstate=str(inputKey[3]))
+        except Exception as e:
+            sys.exit('traincascade argument error : '+str(e))
+
+    elif str(inputKey[0]) == 'haartraining' and platform.system() == 'Linux' :
+        sys.exit('this method not finished\nPlease run prepare_haarCascade.py help')
+
+    elif str(inputKey[0]) == 'performance' and platform.system() == 'Linux' :
+        sys.exit('this method not finished\nPlease run prepare_haarCascade.py help')
+
+    else :
+        sys.exit("method doesn't have in program\n-----------------------\nPlease run prepare_haarCascade.py help")
+
+
 def resize_image(selectFile = 'test-0.png', size = 24):
+    '''resize image from folder dataExtract and save to folder data, 
+        And select main image.'''
 
     print('select file *'+selectFile +" : " +str(size))        
-    '''*************************************************
-    *                                                  *
-    *                  config main image               *
-    *                                                  *
-    *************************************************'''
-
-    
 
     '''*************************************************
     *                                                  *
@@ -85,18 +126,19 @@ def resize_image(selectFile = 'test-0.png', size = 24):
     path = 'dataExtract'
     fileList= [f for f in os.listdir(path)]
     for f in fileList:
-        img = Image.open(path+'/'+f)
+        img = Image.open(path+dirCom+f)
         if img.height < int(size):
             sys.exit('size is bigger than '+str(img.height))
 
         img = img.resize((int(size),int(size)),Image.ANTIALIAS)
-        img.save('data/'+f)
+        img.save('data'+dirCom+f)
 
         if f.split('_')[1] == selectFile:
-            img.save('main_img/'+f)
+            img.save('main_img'+dirCom+f)
 
 
 def create_bg_txt(select_value):
+    '''use image from dataExtract and input string to write bg_neg.txt and bg_pos.txt .'''
     
     '''*************************************************
     *                                                  *
@@ -138,14 +180,17 @@ def create_bg_txt(select_value):
     if str(select_value) in str(listOfClass):
         for f in randomList:
             if str(f.split('_')[0]) == str(select_value):
-                f_pos.write("data/"+f+"\n")
+                f_pos.write("data"+dirCom+f+"\n")
             else:
-                f_neg.write("data/"+f+"\n")
+                f_neg.write("data"+dirCom+f+"\n")
     else:
         sys.exit('out of class')
 
 
 def generate_picture(limitFilePerClass = 50):
+    '''generate picture from file in folder dataCompress and save to folder
+    dataExtract with limit picture per class.'''
+
     '''*************************************************
     *                                                  *
     *              config generate number              *
@@ -185,10 +230,10 @@ def generate_picture(limitFilePerClass = 50):
     *                                                  *
     *************************************************'''
 
-    for s in range(0,3): # 3 suffix
+    for s in range(1,3): # traain & validate
         for j in range(0,30): # 30 class
             object = listOfClass[j]
-            f = open('dataCompress/dataset_'+str(object)+'_all_'+suffix[s]+'.txt','r')
+            f = open('dataCompress'+dirCom+'dataset_'+str(object)+'_all_'+suffix[s]+'.txt','r')
             image = str(f.read()).split('\n')[:-1]
             f.close()
 
@@ -196,7 +241,7 @@ def generate_picture(limitFilePerClass = 50):
             numCount = 0
             for i in range(len(image)):
                 
-                path = 'dataExtract/'+str(object)+'_'+suffix[s]+'-'+str(numCount)+'.png'
+                path = 'dataExtract'+dirCom+str(object)+'_'+suffix[s]+'-'+str(numCount)+'.png'
 
                 image[i] = np.fromstring(image[i], dtype=float, sep=',')
                 image[i] = np.array(image[i])
@@ -208,11 +253,39 @@ def generate_picture(limitFilePerClass = 50):
                 if numCount > limitFilePerClass-1 :
                     break
                 if (numCount%int(limitFilePerClass/2)) == 0 :
-                    print("generate"+str(numKeep+numCount)+ ":"+str(object) +"-"+str(numCount))
+                    print("generate"+str(numKeep+numCount)+ ":"+suffix[s]+'-'+str(object) +"-"+str(numCount))
 
                 numCount+=1
 
+def run_opencv_createsamples(main_img='',number=''):
+    ''' opencv_createsamples library from libopencv-dev .\n
+        To generate vector file for run opencv_traincascade .'''
 
+    if main_img=='' or number=='':
+        sys.exit('main img or number is invalid')
+
+    command = 'opencv_createsamples -img main_img/'+str(main_img)+'* -bg bg_pos.txt -vec positives.vec -maxxangle 0.1 -maxyangle 0.1 -maxzangle 0.1 -num '+str(number)
+    os.system(command)
+
+def run_opencv_traincascade(numpos,numneg,numstate):
+    ''' opencv_traincascade library from libopencv-dev .\n
+        To generate haarCascade classification file. '''
+
+    if numpos==0 or numneg==0 or numstate==0 :
+        sys.exit('numpos | numneg | numstate is 0')
+    
+    command = 'opencv_traincascade -data output_data -vec positives.vec -bg bg_neg.txt -npos '+str(numpos)+' -nneg '+str(numneg)+' -nstate '+str(numstate)+' -w '+str(weight)+' -h '+str(height)+' -precalcValBufSize 1024 -precalcIdxBufSize 1024'
+
+
+def run_opencv_haartraining():
+    '''Now, don't know how it use.'''
+    
+    pass
+
+def run_opencv_performance():
+    '''Now, don't know how it use.'''
+        
+    pass
 
 if __name__ == '__main__':
     main()
