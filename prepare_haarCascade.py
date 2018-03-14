@@ -55,6 +55,7 @@ def main():
     elif str(inputKey[0]) == 'resize':
         try :
             resize_image(selectFile = (str(inputKey[1])+'.png'), size = int(inputKey[2]))
+
         except Exception :
             resize_image()
 
@@ -125,6 +126,7 @@ def resize_image(selectFile = 'test-0.png', size = 24):
 
     path = 'dataExtract'
     fileList= [f for f in os.listdir(path)]
+
     for f in fileList:
         img = Image.open(path+dirCom+f)
         if img.height < int(size):
@@ -181,10 +183,19 @@ def create_bg_txt(select_value):
         for f in randomList:
             if str(f.split('_')[0]) == str(select_value):
                 f_pos.write("data"+dirCom+f+"\n")
+                
             else:
                 f_neg.write("data"+dirCom+f+"\n")
+                
     else:
         sys.exit('out of class')
+    
+    fPos = open('bg_pos.txt','r') 
+    print("number of positive : "+str(len(str(fPos.read()).split('\n'))))
+    fPos.close()
+    # fNeg = open('bg_neg.txt','r')
+    # print("number of negative : "+str(len(str(fNeg.read()).split('\n'))))
+    # fNeg.close()
 
 
 def generate_picture(limitFilePerClass = 50):
@@ -275,7 +286,7 @@ def run_opencv_traincascade(numpos,numneg,numstate):
         sys.exit('numpos | numneg | numstate is 0')
     
     command = 'opencv_traincascade -data output_data -vec positives.vec -bg bg_neg.txt -npos '+str(numpos)+' -nneg '+str(numneg)+' -nstate '+str(numstate)+' -w '+str(weight)+' -h '+str(height)+' -precalcValBufSize 1024 -precalcIdxBufSize 1024'
-
+    os.system(command)
 
 def run_opencv_haartraining():
     '''Now, don't know how it use.'''
