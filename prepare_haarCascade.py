@@ -179,23 +179,21 @@ def create_bg_txt(select_value):
                     'seven','eight','nine']+['ZeroTH','OneTH','TwoTH','ThreeTH','FourTH','FiveTH','SixTH',
                     'SevenTH','EightTH','NineTH']
 
+    countPos =0
+    countNeg =0
     if str(select_value) in str(listOfClass):
         for f in randomList:
             if str(f.split('_')[0]) == str(select_value):
                 f_pos.write("data"+dirCom+f+"\n")
-                
+                countPos+=1
             else:
                 f_neg.write("data"+dirCom+f+"\n")
-                
+                countNeg+=1
     else:
         sys.exit('out of class')
     
-    fPos = open('bg_pos.txt','r') 
-    print("number of positive : "+str(len(str(fPos.read()).split('\n'))))
-    fPos.close()
-    # fNeg = open('bg_neg.txt','r')
-    # print("number of negative : "+str(len(str(fNeg.read()).split('\n'))))
-    # fNeg.close()
+    print("number of positive : "+str(countPos))
+    print("number of negative : "+str(countNeg))
 
 
 def generate_picture(limitFilePerClass = 50):
@@ -285,7 +283,7 @@ def run_opencv_traincascade(numpos,numneg,numstate):
     if numpos==0 or numneg==0 or numstate==0 :
         sys.exit('numpos | numneg | numstate is 0')
     
-    command = 'opencv_traincascade -data output_data -vec positives.vec -bg bg_neg.txt -npos '+str(numpos)+' -nneg '+str(numneg)+' -nstate '+str(numstate)+' -w '+str(weight)+' -h '+str(height)+' -precalcValBufSize 1024 -precalcIdxBufSize 1024'
+    command = 'opencv_traincascade -data output_data -vec positives.vec -bg bg_neg.txt -numPos '+str(numpos)+' -numNeg '+str(numneg)+' -numStates '+str(numstate)+' -w '+str(weight)+' -h '+str(height)+' -precalcValBufSize 1024 -precalcIdxBufSize 1024'
     os.system(command)
 
 def run_opencv_haartraining():
