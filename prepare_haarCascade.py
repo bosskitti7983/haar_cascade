@@ -57,8 +57,8 @@ def main():
         print('------------------------------------------------------------------------------------')
         print('generate 30 classification  : required --> libopencv-dev ')
         print('prepare_haarCascade autogen [param]')
-        print('param:\tnumber/class -- main_image -- size -- numstate')
-        print('\t 1000 train-0 24 10\n')
+        print('param:\tnumber/class -- main_image -- size -- numstate -- state(repackage,unrepackage)')
+        print('\t 1000 train-0 24 10 repackage\n')
 
     elif str(inputKey[0]) == 'resize':
         try :
@@ -102,7 +102,7 @@ def main():
 
     elif str(inputKey[0]) == 'autogen' and platform.system() == 'Linux' :
         try :
-            AutoGenerateClassification(numberPerClass=str(inputKey[1]), main_img=str(inputKey[2]), size=str(inputKey[3]), numstate=str(inputKey[4]))
+            AutoGenerateClassification(numberPerClass=str(inputKey[1]), main_img=str(inputKey[2]), size=str(inputKey[3]), numstate=str(inputKey[4]), state=str(inputKey[5]))
         except Exception as e:
             sys.exit('error:'+str(e))
     else :
@@ -316,12 +316,14 @@ def run_opencv_performance():
         
     pass
 
-def AutoGenerateClassification(numberPerClass=1000, main_img='train-0',size=24, numstate=10):
+def AutoGenerateClassification(numberPerClass=1000, main_img='train-0',size=24, numstate=10, state ='repackage'):
     '''auto generate 30 classification by auto parameter.'''
-    print('gen_image '+str(numberPerClass)+' per class')
-    generate_picture(limitFilePerClass = numberPerClass)
-    print('done')
-    resize_image(selectFile=str(main_img)+'.png',size=size)
+    
+    if str(state) == 'repackage' :
+        print('gen_image '+str(numberPerClass)+' per class')
+        generate_picture(limitFilePerClass = numberPerClass)
+        print('done')
+        resize_image(selectFile=str(main_img)+'.png',size=size)
     
     for selectClass in listOfClass:
         create_bg_txt(select_value=selectClass)
