@@ -303,7 +303,7 @@ def run_opencv_traincascade(main_class,numpos,numneg,numstate):
     if numpos==0 or numneg==0 or numstate==0 :
         sys.exit('numpos | numneg | numstate is 0')
     
-    command = 'opencv_traincascade -data output_data'+dirCom+str(main_class) +dirCom +' -vec positives.vec -bg bg_neg.txt -numPos '+str(numpos)+' -numNeg '+str(numneg)+' -numStages '+str(numstate)+' -w '+str(weight)+' -h '+str(height)+' -precalcValBufSize 4096 -precalcIdxBufSize 4096'
+    command = 'opencv_traincascade -data output_data'+dirCom+str(main_class) +dirCom +' -vec positives.vec -bg bg_neg.txt -numPos '+str(numpos)+' -numNeg '+str(numneg)+' -numStages '+str(numstate)+' -w '+str(weight)+' -h '+str(height)+' -precalcValBufSize 2048 -precalcIdxBufSize 2048'
     os.system(command)
 
 def run_opencv_haartraining():
