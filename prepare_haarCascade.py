@@ -49,13 +49,13 @@ def main():
         print('prepare_haarCascade [method] [param] \nmethod:\tgen_image\tresize\t\t\tcreate_bg')
         print('param:\tnumber/class\tmain_image -- size\tmain_class\n\t1000\t\ttrain-0 24\t\tone')
         print('------------------------------------------------------------')
-        print('generate classification : required --> libopencv-dev ')
+        print('generate classification : required --> libopencv-dev, linux os ')
         print('prepare_haarCascade [method] [param]')
         print('method:\tcreatesamples\t\ttraincascade\t\t\t\t\thaartraining\tperformance')
         print('param:\tmain_class -- number\tmain_class -- numpos -- numneg -- numstate\tnon_finished\tnon_finished')
         print('\tone 1000\t\tone 800 2400 10\t\t\t\t\t-\t\t-')
         print('------------------------------------------------------------------------------------')
-        print('generate 30 classification  : required --> libopencv-dev ')
+        print('generate 30 classification  : required --> libopencv-dev, linuux os ')
         print('prepare_haarCascade autogen [param]')
         print('param:\tnumber/class -- main_image -- size -- numstate -- state(repackage,unrepackage)')
         print('\t 1000 train-0 24 10 repackage\n')
@@ -293,7 +293,7 @@ def run_opencv_createsamples(main_class='',number=''):
     if main_class=='' or number=='':
         sys.exit('main class or number is invalid')
 
-    command = 'opencv_createsamples -img main_img'+dirCom+str(main_class)+'* -bg bg_pos.txt -vec positives.vec -maxxangle 0.1 -maxyangle 0.1 -maxzangle 0.1 -num '+str(number)
+    command = 'opencv_createsamples -img main_img'+dirCom+str(main_class)+'* -bg bg_pos.txt -vec positives.vec -maxxangle 1.2 -maxyangle 1.2 -maxzangle 0.5 -num '+str(number)
     os.system(command)
 
 def run_opencv_traincascade(main_class,numpos,numneg,numstate):
@@ -336,25 +336,26 @@ def AutoGenerateClassification(numberPerClass=1000, main_img='train-0',size=24, 
         num = predictNumPosNumNeg(countPos=countPos,countNeg=countNeg)    
 
         run_opencv_createsamples(main_class=selectClass,number=int(num[0]))
-        run_opencv_traincascade(main_class=selectClass,numpos=int(num[0]*3/4),numneg=int(num[0]*9/4),numstate=int(numstate))
+        run_opencv_traincascade(main_class=selectClass,numpos=int(num[0]*3/4),numneg=int(num[0]*6/4),numstate=int(numstate))
 
 
 def predictNumPosNumNeg(countPos,countNeg):
     ''' find NumPos and NumNeg in term i*pow(10,n) .'''
     countKeep = 0
-    pos = countPos
-    neg = countNeg
+    pos = int(countPos)
+    neg = int(countNeg)
     while pos >= 10:
         pos /= 10
         countKeep+=1
-    pos = pow(10,countKeep)*pos
+    pos = int(pow(10,countKeep)*int(pos))
 
     countKeep = 0
     while neg >= 10:
         neg /= 10
         countKeep+=1
-    neg = pow(10,countKeep)*neg
+    neg = int(pow(10,countKeep)*int(neg))
     
+    print('pos select :'+str(pos)+'\nneg select :'+str(neg))
     return [pos,neg]
 
 if __name__ == '__main__':
