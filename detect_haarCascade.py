@@ -78,7 +78,7 @@ class haarCascade():
     def testCascade(self):
         ''' test classifier by test data. '''	
         keepData={}
-        for j in range(0,10): # 30 class
+        for j in range(0,30): # 30 class
             object = self.listOfClass[j]
             f = open('dataCompress'+self.dirCom+'dataset_'+str(object)+'_all_'+self.suffix[0]+'.txt','r')
             image = str(f.read()).split('\n')[:-1]
