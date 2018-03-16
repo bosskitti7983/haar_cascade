@@ -32,5 +32,9 @@ def connectCamera():
 
 hc = haarCascade()
 # connectCamera()
-hc.deleteCascadeFile()
-hc.deleteMainCascadeFile()
+# hc.deleteCascadeFile()
+# hc.deleteMainCascadeFile()
+
+
+
+hc.testCascade()

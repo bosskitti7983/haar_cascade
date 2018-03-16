@@ -101,6 +101,4 @@ ENV/
 .mypy_cache/
 .vscode/settings.json
 .vscode/
-resize_image.py
-create_bg_txt.py
-generate_picture.py
+__pycache__/
