@@ -32,7 +32,7 @@ def connectCamera():
 
 def main():
 
-    inputKey = str(sys.argv[0])
+    inputKey = sys.argv[1:2]
     hc = haarCascade()
     # connectCamera()
     # hc.deleteCascadeFile()
@@ -40,20 +40,26 @@ def main():
     # hc.copyCascadeFile()
     # hc.testCascade()
 
-    if inputKey == '' or inputKey == 'help' :
-        sys.exit('python [param]\nmethod:\t 1 or renewCascade\n\t\t 2 or test\n\t\t3 or removeAllCascade\n')
+    if inputKey == [] or str(inputKey[0]) == 'help' :
+        sys.exit('test_run.py [param]\nparam:\t 1 or renewCascade\n\t 2 or test\n\t 3 or removeAllCascade\n')
 
-    elif inputKey == '1' or inputKey == 'renewCascade' :
+    elif str(inputKey[0]) == '1' or str(inputKey[0]) == 'renewCascade' :
         '''remove old cascade files and copy new cascade files.'''
+
+        print('remove old cascade files and copy new cascade files.')
         hc.deleteCascadeFile()
         hc.copyCascadeFile()
 
-    elif inputKey == '2' or inputKey == 'test':
-        ''' test cascade accuracy file files.'''
+    elif str(inputKey[0]) == '2' or str(inputKey[0]) == 'test':
+        '''test cascade accuracy file files.'''
+
+        print('test cascade accuracy file files.')
         hc.testCascade()
 
-    elif inputKey == '3' or inputKey == 'removeAllCascade':
-        ''' remove all main cascade files.'''
+    elif str(inputKey[0]) == '3' or str(inputKey[0]) == 'removeAllCascade':
+        '''remove all main cascade files.'''
+
+        print('remove all main cascade files.')
         hc.deleteMainCascadeFile()
 
 if __name__ == '__main__':
