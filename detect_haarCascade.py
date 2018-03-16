@@ -84,7 +84,7 @@ class haarCascade():
             image = str(f.read()).split('\n')[:-1]
             f.close()
             keepData[object] = 0			
-
+            print("test : " +str(object))
             for i in range(len(image)):
                 image[i] = np.fromstring(image[i], dtype=float, sep=',')
                 image[i] = np.array(image[i], dtype=np.uint8)*255
