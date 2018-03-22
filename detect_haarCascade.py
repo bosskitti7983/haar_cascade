@@ -37,29 +37,35 @@ class haarCascade():
         self.listOfClass = [0,1,2,3,4,5,6,7,8,9]+['zero','one','two','three','four','five','six','seven','eight','nine']+['ZeroTH','OneTH','TwoTH','ThreeTH','FourTH','FiveTH','SixTH','SevenTH','EightTH','NineTH']
         self.suffix = ['test','train','validate']
 
-    def callClassifiers(self):
+    def callClassifiers(self,feature):
         ''' call all classifier '''
+        if feature == 'HAAR':
+            self.multiClassifiers = {str(i):cv2.CascadeClassifier('cascade_file'+self.dirCom+str(i)) for i in os.listdir('cascade_file')}
+        elif feature == 'HOG':
+            self.multiClassifiers = {str(i):cv2.HOGDescriptor('cascade_file'+self.dirCom+str(i)) for i in os.listdir('cascade_file')}
 
-        self.multiClassifiers = {str(i):cv2.CascadeClassifier('cascade_file'+self.dirCom+str(i)) for i in os.listdir('cascade_file')}
+        elif  feature == 'LBP':
+            pass
         return 0
 
-    def detectHaarCascade(self,image):
+    def detectHaarCascade(self,image,feature):
         '''for detect text from camera with 30 haar-cascade classifier '''
 
-        if self.multiClassifiers == [] :
-            self.callClassifiers()
-		
-        
+        self.callClassifiers(feature=feature)
         img = image
         # gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         returnData = []
         for selectClassifier in list(self.multiClassifiers):
-            output = self.multiClassifiers[selectClassifier].detectMultiScale(img, 3.2, 5)
+            if feature == 'HAAR':
+                output = self.multiClassifiers[selectClassifier].detectMultiScale(img, 3.2, 5)
+            elif feature == 'HOG':
+                output,w = self.multiClassifiers[selectClassifier].detectMultiScale(img,winStride=(8,8),padding=(16,16), scale=1.05, useMeanshiftGrouping=False)
+            elif feature == 'LBP':
+                pass
             # print(str(len(output)))
             # print(output)
             output2 = []
             
-
             if len(output) != 0:
                 
                 for (x, y, w, h) in output :
@@ -75,7 +81,7 @@ class haarCascade():
 
 	    
 
-    def testCascade(self):
+    def testCascade(self,feature):
         ''' test classifier by test data. '''	
         keepData={}
         for j in range(0,30): # 30 class
@@ -89,14 +95,14 @@ class haarCascade():
                 image[i] = np.fromstring(image[i], dtype=float, sep=',')
                 image[i] = np.array(image[i], dtype=np.uint8)*255
                 image[i] = np.reshape(image[i],(int(sqrt(len(image[i]))),int(sqrt(len(image[i])))))
-                image[i] = cv2.resize(image[i],(100,100))
+                # image[i] = cv2.resize(image[i],(100,100))
 
                 
                 # img = Image.fromarray((image[i]*255).astype(np.uint8))
                 if i%int(len(image)/10) == 0:
                     print(str(int(i*100/len(image)))+'/100')
                 
-                detect = self.detectHaarCascade(image[i])
+                detect = self.detectHaarCascade(image=image[i],feature=feature)
                 if str(object) in str(detect)  : # str(object[0]) == str(object) and len(object) == 1
                     keepData[object]+=1
 

@@ -23,11 +23,20 @@ import numpy as np
 *************************************************'''
 
 dirCom = '/'
-weight=24
-height=24
+scaleWeightHeight = 1
+
 listOfClass = [0,1,2,3,4,5,6,7,8,9]+['zero','one','two','three','four','five','six',
                 'seven','eight','nine']+['ZeroTH','OneTH','TwoTH','ThreeTH','FourTH','FiveTH','SixTH',
                 'SevenTH','EightTH','NineTH']
+
+'''*************************************************
+*                                                  *
+*             define anoymous function             *
+*                                                  *
+*************************************************'''
+
+WHfromArray1D = lambda arraySize : ( int(sqrt(arraySize*scaleWeightHeight)), int(sqrt(arraySize/scaleWeightHeight)) )
+
 
 '''*************************************************
 *                                                  *
@@ -36,7 +45,7 @@ listOfClass = [0,1,2,3,4,5,6,7,8,9]+['zero','one','two','three','four','five','s
 *************************************************'''
 
 def main():
-    global dirCom, weight, height, listOfClass
+    global dirCom, weight, height, listOfClass 
     inputKey = sys.argv[1:]
     
     if platform.system() == 'Linux':
@@ -57,8 +66,8 @@ def main():
         print('------------------------------------------------------------------------------------')
         print('generate 30 classification  : required --> libopencv-dev, linuux os ')
         print('prepare_haarCascade.py autogen [param]')
-        print('param:\tnumber/class -- main_image -- size -- numstate -- state(repackage,unrepackage)')
-        print('\t 1000 train-0 24 10 repackage\n')
+        print('param:\tnumber/class -- main_image -- size -- numstate -- state(repackage,unrepackage) -- feature(HAAR, HOG, LBP)')
+        print('\t 1000 train-0 24 10 repackage HAAR\n')
 
     elif str(inputKey[0]) == 'resize':
         try :
@@ -88,7 +97,7 @@ def main():
     elif str(inputKey[0]) == 'traincascade' and platform.system() == 'Linux' :
         if str(inputKey[1]) in str(listOfClass) : 
             try:
-                run_opencv_traincascade(main_class=str(inputKey[1]),numpos=str(inputKey[2]),numneg=str(inputKey[3]),numstate=str(inputKey[4]))
+                run_opencv_traincascade(main_class=str(inputKey[1]),numpos=str(inputKey[2]),numneg=str(inputKey[3]),numstate=str(inputKey[4]),feature=str(inputKey[5]))
             except Exception as e:
                 sys.exit('traincascade argument error : '+str(e))
         else :
@@ -102,7 +111,7 @@ def main():
 
     elif str(inputKey[0]) == 'autogen' and platform.system() == 'Linux' :
         try :
-            AutoGenerateClassification(numberPerClass=str(inputKey[1]), main_img=str(inputKey[2]), size=str(inputKey[3]), numstate=str(inputKey[4]), state=str(inputKey[5]))
+            AutoGenerateClassification(numberPerClass=str(inputKey[1]), main_img=str(inputKey[2]), size=str(inputKey[3]), numstate=str(inputKey[4]), state=str(inputKey[5]), feature=str(inputKey[6]))
         except Exception as e:
             sys.exit('error:'+str(e))
     else :
@@ -126,7 +135,8 @@ def generate_picture(limitFilePerClass = 50):
     *************************************************'''
     numCount = 0
     numKeep = 0
-    
+
+
 
     '''*************************************************
     *                                                  *
@@ -173,7 +183,8 @@ def generate_picture(limitFilePerClass = 50):
 
                 image[i] = np.fromstring(image[i], dtype=float, sep=',')
                 image[i] = np.array(image[i])
-                image[i] = np.reshape(image[i],(int(sqrt(len(image[i]))),int(sqrt(len(image[i])))))
+                
+                image[i] = np.reshape(image[i],WHfromArray1D(len(image[i])))
 
                 img = Image.fromarray((image[i]*255).astype(np.uint8))
                 img.save(path)
@@ -188,7 +199,7 @@ def generate_picture(limitFilePerClass = 50):
 def resize_image(selectFile = 'test-0.png', size = 24):
     '''resize image from folder dataExtract and save to folder data, 
         And select main image.'''
-
+    
     print('select file *'+selectFile +" : " +str(size))        
 
     '''*************************************************
@@ -215,7 +226,7 @@ def resize_image(selectFile = 'test-0.png', size = 24):
     *            resize and select main image          *
     *                                                  *
     *************************************************'''
-
+    
     path = 'dataExtract'
     fileList= [f for f in os.listdir(path)]
 
@@ -223,10 +234,10 @@ def resize_image(selectFile = 'test-0.png', size = 24):
         img = Image.open(path+dirCom+f)
         if img.height < int(size):
             sys.exit('size is bigger than '+str(img.height))
-
-        img = img.resize((int(size),int(size)),Image.ANTIALIAS)
+        
+        img = img.resize((int(size),int(int(size)/int(scaleWeightHeight))),Image.ANTIALIAS)
         img.save('data'+dirCom+f)
-
+        
         if f.split('_')[1] == selectFile:
             img.save('main_img'+dirCom+f)
 
@@ -293,17 +304,23 @@ def run_opencv_createsamples(main_class='',number=''):
     if main_class=='' or number=='':
         sys.exit('main class or number is invalid')
 
-    command = 'opencv_createsamples -img main_img'+dirCom+str(main_class)+'* -bg bg_pos.txt -vec positives.vec -maxxangle 1.2 -maxyangle 1.2 -maxzangle 0.5 -num '+str(number)
+    weight, height = Image.open('main_img'+dirCom+os.listdir('main_img')[0]).size
+
+    command = 'opencv_createsamples -img main_img'+dirCom+str(main_class)+'* -bg bg_pos.txt -vec positives.vec -maxxangle 1.2 -maxyangle 1.2 -maxzangle 0.5 -num '+str(number) +' -w '+str(weight)+' -h '+str(height)
     os.system(command)
 
-def run_opencv_traincascade(main_class,numpos,numneg,numstate):
+def run_opencv_traincascade(main_class='0',numpos=0,numneg=0,numstate=0,feature='HAAR'):
     ''' opencv_traincascade library from libopencv-dev .\n
         To generate haarCascade classification file. '''
 
     if numpos==0 or numneg==0 or numstate==0 :
         sys.exit('numpos | numneg | numstate is 0')
+
+    file_0 = os.listdir('main_img')[0]
     
-    command = 'opencv_traincascade -data output_data'+dirCom+str(main_class) +dirCom +' -vec positives.vec -bg bg_neg.txt -numPos '+str(numpos)+' -numNeg '+str(numneg)+' -numStages '+str(numstate)+' -w '+str(weight)+' -h '+str(height)+' -precalcValBufSize 2048 -precalcIdxBufSize 2048'
+    weight, height = Image.open('main_img'+dirCom+os.listdir('main_img')[0]).size
+    
+    command = 'opencv_traincascade -featureType '+str(feature)+' -data output_data'+dirCom+str(main_class) +dirCom +' -vec positives.vec -bg bg_neg.txt -numPos '+str(numpos)+' -numNeg '+str(numneg)+' -numStages '+str(numstate)+' -w '+str(weight)+' -h '+str(height)+' -precalcValBufSize 2048 -precalcIdxBufSize 2048'
     os.system(command)
 
 def run_opencv_haartraining():
@@ -316,7 +333,7 @@ def run_opencv_performance():
         
     pass
 
-def AutoGenerateClassification(numberPerClass=1000, main_img='train-0',size=24, numstate=10, state ='repackage'):
+def AutoGenerateClassification(numberPerClass=1000, main_img='train-0',size=24, numstate=10, state ='repackage', feature='HAAR'):
     '''auto generate 30 classification by auto parameter.'''
     
     if str(state) == 'repackage' :
@@ -334,9 +351,9 @@ def AutoGenerateClassification(numberPerClass=1000, main_img='train-0',size=24, 
             countPos = len(str(f.read()).split('\n'))
 
         num = predictNumPosNumNeg(countPos=countPos,countNeg=countNeg)    
-
+        renum = predictNumPosNumNeg(countPos=num[0]*3/4,countNeg=num[0]*9/4)    
         run_opencv_createsamples(main_class=selectClass,number=int(num[0]))
-        run_opencv_traincascade(main_class=selectClass,numpos=int(num[0]*3/4),numneg=int(num[0]*6/4),numstate=int(numstate))
+        run_opencv_traincascade(main_class=selectClass,numpos=int(renum[0]),numneg=int(renum[1]),numstate=int(numstate),feature=feature)
 
 
 def predictNumPosNumNeg(countPos,countNeg):
@@ -355,7 +372,7 @@ def predictNumPosNumNeg(countPos,countNeg):
         countKeep+=1
     neg = int(pow(10,countKeep)*int(neg))
     
-    print('pos select :'+str(pos)+'\nneg select :'+str(neg))
+
     return [pos,neg]
 
 if __name__ == '__main__':
