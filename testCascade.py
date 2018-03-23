@@ -11,7 +11,7 @@ import sys
 import os
 
 import cv2
-from detect_haarCascade import haarCascade
+from detectCascade import multiCascade
 
 def connectCamera():
     cap = cv2.VideoCapture(0)
@@ -21,7 +21,7 @@ def connectCamera():
         if ret == None:
             sys.exit("can't connect camera")
         else :
-            frame2 = hc.detectHaarCascade(frame)
+            frame2 = hc.detectFromCascade(frame)
             cv2.imshow('frame',frame)
             cv2.imshow('frame2',frame2)
             if cv2.waitKey(1)& 0xff == ord('q'):
@@ -33,7 +33,7 @@ def connectCamera():
 def main():
 
     inputKey = sys.argv[1:3]
-    hc = haarCascade()
+    hc = multiCascade()
     # connectCamera()
     # hc.deleteCascadeFile()
     # hc.deleteMainCascadeFile()

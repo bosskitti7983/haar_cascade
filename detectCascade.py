@@ -22,7 +22,7 @@ from math import sqrt
 *                                                  *
 *************************************************'''
 
-class haarCascade():
+class multiCascade():
     '''for detect text from camera with 30 haar-cascade classifier and manage classifier files'''
     def __init__(self):
         
@@ -60,8 +60,8 @@ class haarCascade():
             self.multiClassifiers = {str(i):cv2.CascadeClassifier('cascade_file'+self.dirCom+str(feature)+self.dirCom+str(i)) for i in os.listdir('cascade_file'+self.dirCom+str(feature))}
         return 0
 
-    def detectHaarCascade(self,image,feature):
-        '''for detect text from camera with 30 haar-cascade classifier '''
+    def detectFromCascade(self,image,feature):
+        '''for detect text from camera with 30 cascade classifier '''
 
         if self.multiClassifiers == []:
             self.callClassifiers(feature=feature)
@@ -122,7 +122,7 @@ class haarCascade():
                 if i%int(len(image)/10) == 0:
                     print(str(int(i*100/len(image)))+'/100')
                 
-                detect = self.detectHaarCascade(image=image[i],feature=feature)
+                detect = self.detectFromCascade(image=image[i],feature=feature)
                 if str(object) in str(detect)  : # str(object[0]) == str(object) and len(object) == 1
                     keepData[object]+=1
 

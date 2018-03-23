@@ -55,17 +55,17 @@ def main():
         
     if inputKey == [] or str(inputKey[0]) == 'help':
         print('set data')
-        print('prepare_haarCascade.py [method] [param] \nmethod:\tgen_image\tresize\t\t\tcreate_bg\tremove_xml')
+        print('trainCascade.py [method] [param] \nmethod:\tgen_image\tresize\t\t\tcreate_bg\tremove_xml')
         print('param:\tnumber/class\tmain_image -- size\tmain_class\n\t1000\t\ttrain-0 24\t\tone')
         print('------------------------------------------------------------')
         print('generate classification : required --> libopencv-dev, linux os ')
-        print('prepare_haarCascade.py [method] [param]')
+        print('trainCascade.py [method] [param]')
         print('method:\tcreatesamples\t\ttraincascade\t\t\t\t\thaartraining\tperformance')
         print('param:\tmain_class -- number\tmain_class -- numpos -- numneg -- numstate\tnon_finished\tnon_finished')
         print('\tone 1000\t\tone 800 2400 10\t\t\t\t\t-\t\t-')
         print('------------------------------------------------------------------------------------')
         print('generate 30 classification  : required --> libopencv-dev, linuux os ')
-        print('prepare_haarCascade.py autogen [param]')
+        print('trainCascade.py autogen [param]')
         print('param:\tnumber/class -- main_image -- h_size -- numstate -- state(repackage,unrepackage) -- feature(HAAR, HOG, LBP)')
         print('\t1000 \t\ttrain-0 \t24 \t10 \t\trepackage \t\t\tHAAR\n')
 
