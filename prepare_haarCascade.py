@@ -23,7 +23,7 @@ import numpy as np
 *************************************************'''
 
 dirCom = '/'
-scaleWeightHeight = 1
+scaleWeightHeight = 0.5
 
 listOfClass = [0,1,2,3,4,5,6,7,8,9]+['zero','one','two','three','four','five','six',
                 'seven','eight','nine']+['ZeroTH','OneTH','TwoTH','ThreeTH','FourTH','FiveTH','SixTH',
@@ -55,7 +55,7 @@ def main():
         
     if inputKey == [] or str(inputKey[0]) == 'help':
         print('set data')
-        print('prepare_haarCascade.py [method] [param] \nmethod:\tgen_image\tresize\t\t\tcreate_bg')
+        print('prepare_haarCascade.py [method] [param] \nmethod:\tgen_image\tresize\t\t\tcreate_bg\tremove_xml')
         print('param:\tnumber/class\tmain_image -- size\tmain_class\n\t1000\t\ttrain-0 24\t\tone')
         print('------------------------------------------------------------')
         print('generate classification : required --> libopencv-dev, linux os ')
@@ -66,9 +66,12 @@ def main():
         print('------------------------------------------------------------------------------------')
         print('generate 30 classification  : required --> libopencv-dev, linuux os ')
         print('prepare_haarCascade.py autogen [param]')
-        print('param:\tnumber/class -- main_image -- size -- numstate -- state(repackage,unrepackage) -- feature(HAAR, HOG, LBP)')
-        print('\t 1000 train-0 24 10 repackage HAAR\n')
+        print('param:\tnumber/class -- main_image -- h_size -- numstate -- state(repackage,unrepackage) -- feature(HAAR, HOG, LBP)')
+        print('\t1000 \t\ttrain-0 \t24 \t10 \t\trepackage \t\t\tHAAR\n')
 
+    elif str(inputKey[0]) == 'remove_xml':
+        deleteMainCascadeFile()
+        
     elif str(inputKey[0]) == 'resize':
         try :
             resize_image(selectFile = (str(inputKey[1])+'.png'), size = int(inputKey[2]))
@@ -232,10 +235,11 @@ def resize_image(selectFile = 'test-0.png', size = 24):
 
     for f in fileList:
         img = Image.open(path+dirCom+f)
-        if img.height < int(size):
-            sys.exit('size is bigger than '+str(img.height))
         
-        img = img.resize((int(size),int(int(size)/int(scaleWeightHeight))),Image.ANTIALIAS)
+        if img.height < int(size) or img.width < int(size):
+            sys.exit('size is bigger than '+str(img.height)+','+str(img.width))
+        
+        img = img.resize((int(int(size)/scaleWeightHeight),int(size)),Image.ANTIALIAS)
         img.save('data'+dirCom+f)
         
         if f.split('_')[1] == selectFile:
@@ -355,6 +359,13 @@ def AutoGenerateClassification(numberPerClass=1000, main_img='train-0',size=24, 
         run_opencv_createsamples(main_class=selectClass,number=int(num[0]))
         run_opencv_traincascade(main_class=selectClass,numpos=int(renum[0]),numneg=int(renum[1]),numstate=int(numstate),feature=feature)
 
+def deleteMainCascadeFile():
+    '''delete all cascade file in folder output_data. '''
+
+    for selectClass in listOfClass :
+        for f in [i for i in os.listdir('output_data'+dirCom+str(selectClass))] :
+            os.remove(os.path.join('output_data'+dirCom+str(selectClass),f))
+    return 0
 
 def predictNumPosNumNeg(countPos,countNeg):
     ''' find NumPos and NumNeg in term i*pow(10,n) .'''
