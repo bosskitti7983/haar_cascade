@@ -15,52 +15,84 @@
   <featureParams>
     <maxCatCount>256</maxCatCount>
     <featSize>1</featSize></featureParams>
-  <stageNum>2</stageNum>
+  <stageNum>3</stageNum>
   <stages>
     <!-- stage 0 -->
     <_>
       <maxWeakCount>2</maxWeakCount>
-      <stageThreshold>-1.0542323440313339e-01</stageThreshold>
+      <stageThreshold>-2.3152709007263184e-01</stageThreshold>
       <weakClassifiers>
         <_>
           <internalNodes>
-            0 -1 0 -2147483648 0 0 0 -2147450880 0 -2147450752
-            -2139062134</internalNodes>
+            0 -1 6 -1073295137 -1612068621 142984407 -581449705
+            -57809953 -1700741119 -1451078689 -67507593</internalNodes>
           <leafValues>
-            -9.3220341205596924e-01 9.7701150178909302e-01</leafValues></_>
+            -9.7943443059921265e-01 7.2972971200942993e-01</leafValues></_>
         <_>
           <internalNodes>
-            0 -1 2 -1068571905 -2127462147 1531998623 -638205669
-            -133918245 -661531630 -2012755221 -285223437</internalNodes>
+            0 -1 4 -1072171521 -2130149233 -922467251 -1511772071
+            -740168789 -1912018943 -272053307 -288694285</internalNodes>
           <leafValues>
-            -9.8056405782699585e-01 8.2678014039993286e-01</leafValues></_></weakClassifiers></_>
+            -9.6125680208206177e-01 8.3291530609130859e-01</leafValues></_></weakClassifiers></_>
     <!-- stage 1 -->
     <_>
-      <maxWeakCount>2</maxWeakCount>
-      <stageThreshold>1.8215198069810867e-02</stageThreshold>
+      <maxWeakCount>3</maxWeakCount>
+      <stageThreshold>-9.9362802505493164e-01</stageThreshold>
       <weakClassifiers>
         <_>
           <internalNodes>
-            0 -1 1 -806695398 -1073774340 -1048604 -1141084356 -1118369
-            1602224126 -2147450742 -671113221</internalNodes>
+            0 -1 0 1266670364 -268439442 -65604 -272986743 1073741810
+            65518 -335511416 -2013291014</internalNodes>
           <leafValues>
-            -9.1366904973983765e-01 9.7590363025665283e-01</leafValues></_>
+            -9.0476191043853760e-01 1.</leafValues></_>
         <_>
           <internalNodes>
-            0 -1 3 0 0 0 16842753 67108864 1073741826 4194315 -11847133</internalNodes>
+            0 -1 3 0 0 0 16842752 0 0 1073741835 -9745765</internalNodes>
           <leafValues>
-            -9.1016823053359985e-01 9.3188428878784180e-01</leafValues></_></weakClassifiers></_></stages>
+            -8.8468450307846069e-01 9.6543633937835693e-01</leafValues></_>
+        <_>
+          <internalNodes>
+            0 -1 5 -464861441 -595285350 -396330401 -1128943388
+            2058928507 -18489863 -585051761 -398728010</internalNodes>
+          <leafValues>
+            -9.9561983346939087e-01 7.9581838846206665e-01</leafValues></_></weakClassifiers></_>
+    <!-- stage 2 -->
+    <_>
+      <maxWeakCount>2</maxWeakCount>
+      <stageThreshold>-1.3133205473423004e-01</stageThreshold>
+      <weakClassifiers>
+        <_>
+          <internalNodes>
+            0 -1 1 -1934082306 -6815652 -6 -539107335 -20972290 -1114120
+            2143289343 -1079014261</internalNodes>
+          <leafValues>
+            -9.0023750066757202e-01 1.</leafValues></_>
+        <_>
+          <internalNodes>
+            0 -1 2 -140452009 251972033 -938417247 402702420 1342456067
+            -1090357227 -402620416 -462640</internalNodes>
+          <leafValues>
+            -9.6211588382720947e-01 7.6890546083450317e-01</leafValues></_></weakClassifiers></_></stages>
   <features>
     <_>
       <rect>
-        0 1 2 5</rect></_>
+        0 2 2 3</rect></_>
     <_>
       <rect>
-        0 2 2 4</rect></_>
+        9 0 6 2</rect></_>
     <_>
       <rect>
-        13 7 2 1</rect></_>
+        10 7 5 2</rect></_>
     <_>
       <rect>
-        14 0 4 2</rect></_></features></cascade>
+        11 0 5 2</rect></_>
+    <_>
+      <rect>
+        12 6 3 2</rect></_>
+    <_>
+      <rect>
+        12 7 3 1</rect></_>
+    <_>
+      <rect>
+        13 7 2 1</rect></_></features></cascade>
 </opencv_storage>

@@ -35,13 +35,9 @@ def main():
     inputKey = sys.argv[1:3]
     hc = multiCascade()
     # connectCamera()
-    # hc.deleteCascadeFile()
-    # hc.deleteMainCascadeFile()
-    # hc.copyCascadeFile()
-    # hc.testCascade()
 
     if inputKey == [] or str(inputKey[0]) == 'help' :
-        sys.exit('test_run.py [param1] [param2]\nparam1:\t 0 or removeAllCascade \n\t 1 or renewCascade\n\t 2 or test\nparam2:\t HAAR / HOG / LBP\n')
+        sys.exit('test_run.py [param1] [param2]\nparam1:\t 0 or removeAllCascade \n\t 1 or renewCascade\n\t 2 or testCascade\nparam2:\t HAAR / HOG / LBP\n')
 
     elif str(inputKey[0]) == '0' or str(inputKey[0]) == 'removeAllCascade' :
         hc.deleteCascadeFile()
@@ -55,7 +51,7 @@ def main():
 
 
 
-    elif str(inputKey[0]) == '2' or str(inputKey[0]) == 'test':
+    elif str(inputKey[0]) == '2' or str(inputKey[0]) == 'testCascade':
         '''test cascade accuracy file files.'''
 
         print('test cascade accuracy files.')
