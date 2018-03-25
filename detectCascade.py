@@ -20,7 +20,7 @@ from math import sqrt
 *              define init condition               *
 *                                                  *
 *************************************************'''
-
+ 
 class multiCascade():
     '''for detect text from camera with 30 haar-cascade classifier and manage classifier files'''
     def __init__(self):
