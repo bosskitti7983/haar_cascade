@@ -10,7 +10,7 @@
 import os
 import sys
 import platform
-from random import choice, randrange 
+from random import choice, randrange, shuffle
 
 from PIL import Image
 from math import sqrt, pow
@@ -295,14 +295,20 @@ def create_bg_txt(select_value):
             #     f_neg.write("data"+dirCom+f+"\n")
             #     countNeg+=1
         countNegs = int(countPos/len(listOfClass))*len(listOfClass)
-
+        
+        keepList = []
         while (countNeg < countNegs):
             
             key = str(randrange(0,len( [i for i in [ str(j).split('0_train') for j in randomList ] if len(i) == 2] )))+'.png'
             
             for selectClass in listOfClass:
-                f_neg.write("data"+dirCom+str(selectClass)+'_train-'+str(key)+"\n")
-                countNeg+=1    
+                keepList.append("data"+dirCom+str(selectClass)+'_train-'+str(key)+"\n")
+                countNeg+=1 
+
+        shuffle(keepList)
+        for selectList in keepList:
+            f_neg.write(selectList)
+                   
     
 
 
@@ -368,13 +374,13 @@ def AutoGenerateClassification(numberPerClass=1000, main_img='train-0',size=24, 
             countPos = len(str(f.read()).split('\n'))
 
         num = predictNumPosNumNeg(countPos=countPos,countNeg=countNeg)    
-        renum = predictNumPosNumNeg(countPos=num[0]*3/4,countNeg=num[1]*3/4)    
+        renum = predictNumPosNumNeg(countPos=num[0]*4/5,countNeg=num[1]*4/5)    
         run_opencv_createsamples(main_class=selectClass,number=int(num[0]))
         run_opencv_traincascade(main_class=selectClass,numpos=int(renum[0]),numneg=int(renum[1]),numstate=int(numstate),feature=feature)
 
 def deleteMainCascadeFile():
     '''delete all cascade file in folder output_data. '''
-
+    print('removing all main cascade file in folder output_data')
     for selectClass in listOfClass :
         for f in [i for i in os.listdir('output_data'+dirCom+str(selectClass))] :
             os.remove(os.path.join('output_data'+dirCom+str(selectClass),f))

@@ -13,7 +13,7 @@ import platform
 import numpy as np
 import cv2
 from PIL import Image
-from math import sqrt
+from math import sqrt, pow
 
 '''*************************************************
 *                                                  *
@@ -134,13 +134,16 @@ class multiCascade():
             for kAll in self.listOfClass:
                 keepDataAll[str(object)][str(kAll)] = int(keepDataAll[str(object)][str(kAll)])*100/len(image)
 
-            print("\nsuccess : " +str(object))
             keepData[object] = int(keepData[object])*100/len(image)
-            print(str(object) +':'+str(keepData[object])+'/100.00\n')
+            # keepData[object] = (100*(len(keepDataAll[str(object)])-1)-sum(keepDataAll[str(object)].values())+2*keepData[object] )/len(keepDataAll[str(object)]) 
+            keepData[object] = pow(keepData[object],2)/sum(keepDataAll[str(object)].values())
+            print('test detect '+str(object)+' accuracy :'+str(keepData[object])+' %')
             print(keepDataAll[str(object)])
             
+            
         print(keepData)
-        print(keepDataAll)
+        print('summary accuracy :'+sum(keepData)/len(keepData)+' %')
+        # print(keepDataAll)
         return 0
 
     def copyCascadeFile(self,feature ):

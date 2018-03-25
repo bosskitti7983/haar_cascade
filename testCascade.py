@@ -48,8 +48,8 @@ def main():
         print('remove old cascade files and copy new cascade files.')
         hc.deleteCascadeFile(feature= [str(inputKey[1])])
         hc.copyCascadeFile(feature= str(inputKey[1]))
-
-
+        print('test')
+        hc.testCascade(feature= str(inputKey[1]))
 
     elif str(inputKey[0]) == '2' or str(inputKey[0]) == 'testCascade':
         '''test cascade accuracy file files.'''
