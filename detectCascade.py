@@ -33,7 +33,7 @@ class multiCascade():
             self.dirCom = '/'
 
         self.scaleWeightHeight = 0.5
-        self.testResizeH = 50
+        self.testResizeH = 200
 
         self.multiClassifiers = []
         self.listOfClass = [0,1,2,3,4,5,6,7,8,9]+['zero','one','two','three','four','five','six','seven','eight','nine']+['ZeroTH','OneTH','TwoTH','ThreeTH','FourTH','FiveTH','SixTH','SevenTH','EightTH','NineTH']
@@ -81,9 +81,13 @@ class multiCascade():
             if len(output) != 0:
                 
                 for (x, y, w, h) in output :
-                    if h*4 > img.shape[0] and w*4 > img.shape[1]:
+                    if h*2 > img.shape[0] and w*2 > img.shape[1]:
                         output2.append((x,y,w,h))
+                        # print((w,h))
                         cv2.rectangle(image, (x,y), (x+w,y+h), 0, 1)
+                        # cv2.imshow('test',image)
+                        # cv2.waitKey(0)
+                        image = img
                         returnData.append(str(selectClassifier.split('.')[0]))
                         break
 
@@ -103,7 +107,7 @@ class multiCascade():
         self.callClassifiers(feature=feature)
         for j in range(0,30): # 30 class
             object = self.listOfClass[j]
-            f = open('dataCompress'+self.dirCom+'dataset_'+str(object)+'_all_'+self.suffix[0]+'.txt','r')
+            f = open('dataCompress'+self.dirCom+'dataset_'+str(object)+'_'+self.suffix[0]+'.txt','r')
             image = str(f.read()).split('\n')[:-1]
             f.close()
             keepData[object] = 0			

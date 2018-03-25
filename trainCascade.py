@@ -175,7 +175,7 @@ def generate_picture(limitFilePerClass = 50):
     for s in range(1,3): # traain & validate
         for j in range(0,30): # 30 class
             object = listOfClass[j]
-            f = open('dataCompress'+dirCom+'dataset_'+str(object)+'_all_'+suffix[s]+'.txt','r')
+            f = open('dataCompress'+dirCom+'dataset_'+str(object)+'_'+suffix[s]+'.txt','r')
             image = str(f.read()).split('\n')[:-1]
             f.close()
 
@@ -368,7 +368,7 @@ def AutoGenerateClassification(numberPerClass=1000, main_img='train-0',size=24, 
             countPos = len(str(f.read()).split('\n'))
 
         num = predictNumPosNumNeg(countPos=countPos,countNeg=countNeg)    
-        renum = predictNumPosNumNeg(countPos=num[0]*3/4,countNeg=num[0]*9/4)    
+        renum = predictNumPosNumNeg(countPos=num[0]*3/4,countNeg=num[1]*3/4)    
         run_opencv_createsamples(main_class=selectClass,number=int(num[0]))
         run_opencv_traincascade(main_class=selectClass,numpos=int(renum[0]),numneg=int(renum[1]),numstate=int(numstate),feature=feature)
 
