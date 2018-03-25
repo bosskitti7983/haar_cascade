@@ -1,4 +1,4 @@
-# ~/virtualenv/ROBOTICS_studios/bin
+# ~/virtualenv/ROBOTICS_studios/bin/python
 
 
 '''*************************************************
@@ -10,11 +10,12 @@
 import os
 import sys
 import platform
-from random import choice
+from random import choice, randrange 
 
 from PIL import Image
 from math import sqrt, pow
 import numpy as np
+
 
 '''*************************************************
 *                                                  *
@@ -52,7 +53,7 @@ def main():
         dirCom = '/'
     elif platform.system() == 'Windows':
         dirCom = '\\'
-        
+
     if inputKey == [] or str(inputKey[0]) == 'help':
         print('set data')
         print('trainCascade.py [method] [param] \nmethod:\tgen_image\tresize\t\t\tcreate_bg\tremove_xml')
@@ -290,9 +291,21 @@ def create_bg_txt(select_value):
             if str(f.split('_')[0]) == str(select_value):
                 f_pos.write("data"+dirCom+f+"\n")
                 countPos+=1
-            else:
-                f_neg.write("data"+dirCom+f+"\n")
-                countNeg+=1
+            # else:
+            #     f_neg.write("data"+dirCom+f+"\n")
+            #     countNeg+=1
+        countNegs = int(countPos/len(listOfClass))*len(listOfClass)
+
+        while (countNeg < countNegs):
+            
+            key = str(randrange(0,len( [i for i in [ str(j).split('0_train') for j in randomList ] if len(i) == 2] )))+'.png'
+            
+            for selectClass in listOfClass:
+                f_neg.write("data"+dirCom+str(selectClass)+'_train-'+str(key)+"\n")
+                countNeg+=1    
+    
+
+
     else:
         sys.exit('out of class')
     

@@ -81,13 +81,11 @@ class multiCascade():
             if len(output) != 0:
                 
                 for (x, y, w, h) in output :
-                    if (w+h)/2 >sum(Image.open('main_img'+self.dirCom+os.listdir('main_img')[0]).size):
+                    if h*4 > img.shape[0] and w*4 > img.shape[1]:
                         output2.append((x,y,w,h))
                         cv2.rectangle(image, (x,y), (x+w,y+h), 0, 1)
                         returnData.append(str(selectClassifier.split('.')[0]))
-                        # cv2.imshow('win',image)
-                        # cv2.waitKey(0)
-                        # image=img
+                        break
 
         return returnData
 
@@ -122,6 +120,7 @@ class multiCascade():
                     print(str(int(i*100/len(image)))+'/100')
                 
                 detect = self.detectFromCascade(image=image[i],feature=feature)
+
                 if str(object) in str(detect)  : # str(object[0]) == str(object) and len(object) == 1
                     keepData[object]+=1
 
@@ -129,8 +128,8 @@ class multiCascade():
                     keepDataAll[str(object)][str(dete)] +=1
 
             for kAll in self.listOfClass:
-                
                 keepDataAll[str(object)][str(kAll)] = int(keepDataAll[str(object)][str(kAll)])*100/len(image)
+
             print("\nsuccess : " +str(object))
             keepData[object] = int(keepData[object])*100/len(image)
             print(str(object) +':'+str(keepData[object])+'/100.00\n')

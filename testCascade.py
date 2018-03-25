@@ -1,4 +1,4 @@
-# ~/virtualenv/ROBOTICS_studios/bin
+# ~/virtualenv/ROBOTICS_studios/bin/python
 
 
 
