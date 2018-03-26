@@ -142,7 +142,7 @@ class multiCascade():
             
             
         print(keepData)
-        print('summary accuracy :'+sum(keepData)/len(keepData)+' %')
+        print('summary accuracy :'+str(sum(keepData)/len(keepData))+' %')
         # print(keepDataAll)
         return 0
 
