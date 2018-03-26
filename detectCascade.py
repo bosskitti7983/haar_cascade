@@ -104,6 +104,11 @@ class multiCascade():
             for j in range(0,30): # inloop 30 class
                 keepDataAll[str(self.listOfClass[i])].update({str(self.listOfClass[j]):0})
         
+        summaryTP =0
+        summaryFP =0
+        summaryTN =0
+        summaryFN =0
+
         self.callClassifiers(feature=feature)
         for j in range(0,30): # 30 class
             object = self.listOfClass[j]
@@ -144,20 +149,29 @@ class multiCascade():
             FP = sum([ i for i in keepDataAll[str(object)].values() if i != keepDataAll[str(object)][str(object)] ])
             TN = len(image)*29 - FP
             FN = len(image) - TP
+            
+            summaryTP += TP
+            summaryFP += FP
+            summaryTN += TN
+            summaryFN += FN
 
             precision = TP/(TP+FP)
             recall = TP/(TP+TN)
             accuracy = (TP+TN)/(TP+TN+FP+FN)
 
-            print('test detect '+str(object)+' \tprecision :'+str(precision*100)+' %')
+            print('test detect '+str(object)+' \tprecision \t:'+str(precision*100)+' %')
 
-            print('\t\trecall :'+str(recall*100)+' %')   
-            print('\t\taccuracy :'+str(accuracy*100)+' %\n')   
-            # print('\t\taccuracy :'+str(keepDataAll[str(object)][str(object)])+' %')
+            print('\t\trecall \t:'+str(recall*100)+' %')   
+            print('\t\taccuracy \t:'+str(accuracy*100)+' %\n')   
             
-            # print(keepDataAll[str(object)])
-            
-        # print(keepData)
+        summaryPrecision = summaryTP/(summaryTP+summaryFP)
+        summaryRecall = summaryTP/(summaryTP+summaryTN)
+        summaryAccuracy = (summaryTP+summaryTN)/(summaryTP+summaryTN+summaryFP+summaryFN)
+
+        print('summary \tprecision\t:'+str(summaryPrecision*100)+' %')
+        print('\t\trecall\t:'+str(summaryPrecision*100)+' %')
+        print('\t\taccuracy\t:'+str(summaryAccuracy*100)+' %\n')
+        
         # print('summary accuracy :'+str(sum(keepData.values())/len(keepData))+' %')
         # print(keepDataAll)
         return 0
