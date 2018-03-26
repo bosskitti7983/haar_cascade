@@ -132,17 +132,33 @@ class multiCascade():
                     keepDataAll[str(object)][str(dete)] +=1
 
             for kAll in self.listOfClass:
-                keepDataAll[str(object)][str(kAll)] = int(keepDataAll[str(object)][str(kAll)])*100/len(image)
+                keepDataAll[str(object)][str(kAll)] = int(keepDataAll[str(object)][str(kAll)])
 
-            keepData[object] = int(keepData[object])*100/len(image)
+            # keepData[object] = int(keepData[object])*100/len(image)
+
             # keepData[object] = (100*(len(keepDataAll[str(object)])-1)-sum(keepDataAll[str(object)].values())+2*keepData[object] )/len(keepDataAll[str(object)]) 
-            keepData[object] = pow(keepData[object],2)/sum(keepDataAll[str(object)].values())
-            print('test detect '+str(object)+' accuracy :'+str(keepData[object])+' %')
-            print(keepDataAll[str(object)])
+            keepData[object] = keepData[object]/sum(keepDataAll[str(object)].values())
+            # listDat = [ 1-(i/100) for i in keepDataAll[str(object)].values() if keepDataAll[str(object)][str(object)] != i ]
+            # keepData[object] = np.prod( listDat )*keepData[object]
+            TP = keepDataAll[str(object)][str(object)]
+            FP = sum([ i for i in keepDataAll[str(object)].values() if i != keepDataAll[str(object)][str(object)] ])
+            TN = len(image)*29 - FP
+            FN = len(image) - TP
+
+            precision = TP/(TP+FP)
+            recall = TP/(TP+TN)
+            accuracy = (TP+TN)/(TP+TN+FP+FN)
+
+            print('test detect '+str(object)+' \tprecision :'+str(precision*100)+' %')
+
+            print('\t\trecall :'+str(recall*100)+' %')   
+            print('\t\taccuracy :'+str(accuracy*100)+' %\n')   
+            # print('\t\taccuracy :'+str(keepDataAll[str(object)][str(object)])+' %')
             
+            # print(keepDataAll[str(object)])
             
-        print(keepData)
-        print('summary accuracy :'+str(sum(keepData)/len(keepData))+' %')
+        # print(keepData)
+        # print('summary accuracy :'+str(sum(keepData.values())/len(keepData))+' %')
         # print(keepDataAll)
         return 0
 
